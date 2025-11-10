@@ -12,12 +12,12 @@ jobs:
       - run:
           name: Build backend image
           command: |
-            cd backend
+            cd back-end
             docker build -t $DOCKER_HUB_USERNAME/image-resizer-backend:latest .
       - run:
           name: Build frontend image
           command: |
-            cd frontend
+            cd front-end
             docker build -t $DOCKER_HUB_USERNAME/image-resizer-frontend:latest .
       - run:
           name: Push images to Docker Hub
