@@ -1,0 +1,30 @@
+{
+  "name": "image-resize-api",
+  "version": "1.0.0",
+  "description": "Simple TypeScript Express API to fetch, resize and save images using Sharp",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "test": "jasmine"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.21.2",
+    "sharp": "^0.32.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/jasmine": "^4.3.2",
+    "@types/node": "^20.5.6",
+    "@types/node-fetch": "^2.6.2",
+    "@types/uuid": "^10.0.0",
+    "jasmine": "^5.2.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.6.2"
+  }
+}
