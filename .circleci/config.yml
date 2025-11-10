@@ -26,35 +26,11 @@ jobs:
             docker push $DOCKER_HUB_USERNAME/image-resizer-backend:latest
             docker push $DOCKER_HUB_USERNAME/image-resizer-frontend:latest
 
-  deploy:
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - add_ssh_keys:
-          fingerprints:
-            - "YOUR_SSH_KEY_FINGERPRINT"
-      - run:
-          name: Deploy on Sevella
-          command: |
-            ssh -o StrictHostKeyChecking=no ubuntu@sevella.com "
-              docker pull yahyeapps/image-resizer-backend:latest &&
-              docker pull yahyeapps/image-resizer-frontend:latest &&
-              docker stop backend || true &&
-              docker stop frontend || true &&
-              docker rm backend || true &&
-              docker rm frontend || true &&
-              docker run -d --name backend -p 3000:3000 yahyeapps/image-resizer-backend:latest &&
-              docker run -d --name frontend -p 80:80 yahyeapps/image-resizer-frontend:latest
-            "
-
 workflows:
   version: 2
-  build-deploy:
+  build:
     jobs:
-      - build-and-push
-      - deploy:
-          requires:
-            - build-and-push
+      - build-and-push:
           filters:
             branches:
               only: main
