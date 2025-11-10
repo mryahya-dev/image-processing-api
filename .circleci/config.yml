@@ -1,0 +1,60 @@
+version: 2.1
+
+jobs:
+  build-and-push:
+    docker:
+      - image: cimg/base:stable
+    environment:
+      DOCKER_HUB_USERNAME: yahyeapps
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build backend image
+          command: |
+            cd backend
+            docker build -t $DOCKER_HUB_USERNAME/image-resizer-backend:latest .
+      - run:
+          name: Build frontend image
+          command: |
+            cd frontend
+            docker build -t $DOCKER_HUB_USERNAME/image-resizer-frontend:latest .
+      - run:
+          name: Push images to Docker Hub
+          command: |
+            echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
+            docker push $DOCKER_HUB_USERNAME/image-resizer-backend:latest
+            docker push $DOCKER_HUB_USERNAME/image-resizer-frontend:latest
+
+  deploy:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "YOUR_SSH_KEY_FINGERPRINT"
+      - run:
+          name: Deploy on Sevella
+          command: |
+            ssh -o StrictHostKeyChecking=no ubuntu@sevella.com "
+              docker pull yahyeapps/image-resizer-backend:latest &&
+              docker pull yahyeapps/image-resizer-frontend:latest &&
+              docker stop backend || true &&
+              docker stop frontend || true &&
+              docker rm backend || true &&
+              docker rm frontend || true &&
+              docker run -d --name backend -p 3000:3000 yahyeapps/image-resizer-backend:latest &&
+              docker run -d --name frontend -p 80:80 yahyeapps/image-resizer-frontend:latest
+            "
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build-and-push
+      - deploy:
+          requires:
+            - build-and-push
+          filters:
+            branches:
+              only: main

@@ -1,6 +1,0 @@
-# simple gitignore file
-node_modules
-dist
-
-# Local Netlify folder
-.netlify
