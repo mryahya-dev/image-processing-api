@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   test-backend:
     docker:
-      - image: cimg/node:18 # Node version matching your backend
+      - image: cimg/node:18.17 # Node version matching your backend
     steps:
       - checkout
       - run:
