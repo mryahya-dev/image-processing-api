@@ -3,5 +3,6 @@
   "spec_files": ["**/*[sS]pec.ts"],
   "helpers": ["helpers/**/*.ts"],
   "stopSpecOnExpectationFailure": false,
-  "random": false
+  "random": false,
+  "requires": ["ts-node/register"]
 }

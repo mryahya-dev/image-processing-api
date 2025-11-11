@@ -11,7 +11,7 @@ const MAX_IMAGE_BYTES = Number(process.env.MAX_IMAGE_BYTES || 5_000_000);
 
 if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 
-export async function fetchImageToBuffer(url: string): Promise<Buffer> {
+export async function fetchTheImageToBuffer(url: string): Promise<Buffer> {
   const res = await fetch(url);
   if (!res.ok)
     throw new Error(`Failed to fetch image: ${res.status} ${res.statusText}`);
@@ -27,7 +27,10 @@ export async function fetchImageToBuffer(url: string): Promise<Buffer> {
   return buf;
 }
 
-export async function resizeAndSave(buffer: Buffer, opts: ResizeOptions) {
+export async function resizeImageAndSaveImage(
+  buffer: Buffer,
+  opts: ResizeOptions
+) {
   let img = sharp(buffer, { failOnError: true });
   const transformer = img.resize(opts.width, opts.height, {
     fit: "inside",
