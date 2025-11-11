@@ -1,6 +1,22 @@
 version: 2.1
 
 jobs:
+  test-backend:
+    docker:
+      - image: cimg/node:20.5 # Node version matching your backend
+    steps:
+      - checkout
+      - run:
+          name: Install backend dependencies
+          command: |
+            cd back-end
+            npm install
+      - run:
+          name: Run backend tests
+          command: |
+            cd back-end
+            npm test
+
   build-and-push:
     docker:
       - image: cimg/base:stable
@@ -28,9 +44,15 @@ jobs:
 
 workflows:
   version: 2
-  build:
+  build-and-test:
     jobs:
+      - test-backend:
+          filters:
+            branches:
+              only: main
       - build-and-push:
+          requires:
+            - test-backend
           filters:
             branches:
               only: main

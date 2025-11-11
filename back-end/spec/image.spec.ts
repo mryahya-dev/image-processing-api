@@ -1,10 +1,13 @@
-import { fetchImageToBuffer, resizeAndSave } from "../src/imageService";
+import {
+  fetchTheImageToBuffer,
+  resizeImageAndSaveImage,
+} from "../src/imageService";
 import { readFixture } from "./helpers/fileHelper";
 
 describe("imageService", () => {
   it("resizes a small image buffer and saves to disk", async () => {
     const buf = readFixture("sample.jpg");
-    const result = await resizeAndSave(buf, {
+    const result = await resizeImageAndSaveImage(buf, {
       width: 100,
       height: 100,
       format: "jpeg",
