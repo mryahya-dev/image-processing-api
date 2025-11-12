@@ -40,21 +40,33 @@ This project is an **Image Resize API** with a frontend Angular application.
 - Frontend: Deployed on **Cloudflare Pages**
 - Continuous Integration & Deployment: CircleCI
   - Runs automated **tests**
-  - Builds **Docker image** for backend
+  - Builds **Docker images** for backend and frontend
   - Pushes images to **Docker Hub**
   - Deployment is triggered automatically
+
+> **Note:** Both backend and frontend have ready-to-use Dockerfiles for containerized deployment.
 
 ---
 
 ## Folder Structure
 
 ```
+
 root/
 ├─ backend/        # Node.js API
+│  ├─ Dockerfile
+│  ├─ src/
+│  ├─ package.json
+│  └─ .env.example
 ├─ frontend/       # Angular app
+│  ├─ Dockerfile
+│  ├─ src/
+│  ├─ angular.json
+│  └─ package.json
 ├─ .circleci/      # CircleCI configuration
+│  └─ config.yml
 ├─ README.md
-└─ .gitignore
+
 ```
 
 ---
