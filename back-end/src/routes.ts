@@ -1,5 +1,5 @@
 import express from "express";
-import { fetchTheImageToBuffer, resizeImageAndSaveImage } from "./imageService";
+import { fetchImageToBuffer, resizeImageAndSaveImage } from "./imageService";
 import { ResizeOptions } from "./types";
 
 import fs from "fs";
@@ -47,7 +47,7 @@ router.get("/resize", async (req: any, res: any) => {
     if (fmt && ["jpeg", "png", "webp"].includes(fmt)) opts.format = fmt as any;
     if (ql && ql > 0 && ql <= 100) opts.quality = ql;
 
-    const buffer = await fetchTheImageToBuffer(imageUrl);
+    const buffer = await fetchImageToBuffer(imageUrl);
     const result = await resizeImageAndSaveImage(buffer, opts);
 
     res.json({

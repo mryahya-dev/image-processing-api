@@ -34,8 +34,7 @@ jobs:
           name: Build frontend image
           command: |
             cd front-end
-            docker build -t $DOCKER_HUB_USERNAME/image-resizer-frontend:latest .
-      - run:
+       - run:
           name: Push images to Docker Hub
           command: |
             echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin

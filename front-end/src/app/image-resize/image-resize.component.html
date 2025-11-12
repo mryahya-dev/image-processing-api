@@ -1,0 +1,46 @@
+<div class="card">
+    <h2>Resize Image</h2>
+
+    <form (ngSubmit)="resize()" class="form">
+        <label>Image URL</label>
+        <input type="text" [(ngModel)]="url" name="url" placeholder="https://example.com/photo.jpg" required />
+
+        <div class="row">
+            <div>
+                <label>Width (px)</label>
+                <input type="number" [(ngModel)]="width" name="width" />
+            </div>
+            <div>
+                <label>Height (px)</label>
+                <input type="number" [(ngModel)]="height" name="height" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div>
+                <label>Format</label>
+                <select [(ngModel)]="format" name="format">
+                    <option value="jpeg">JPEG</option>
+                    <option value="png">PNG</option>
+                    <option value="webp">WEBP</option>
+                </select>
+            </div>
+            <div>
+                <label>Quality</label>
+                <input type="number" [(ngModel)]="quality" name="quality" min="1" max="100" />
+            </div>
+        </div>
+
+        <button type="submit" [disabled]="loading">Resize</button>
+    </form>
+
+    <div *ngIf="loading">Processing...</div>
+    <div *ngIf="error" class="error">{{ error }}</div>
+
+    <div *ngIf="result" class="result">
+        <p><strong>{{ result.message }}</strong></p>
+        <p>Filename: {{ result.filename }}</p>
+        <img [src]="result.url" alt="Resized result" />
+        <p><a [href]="result.url" target="_blank">Open image</a></p>
+    </div>
+</div>

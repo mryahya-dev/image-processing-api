@@ -1,7 +1,4 @@
-import {
-  fetchTheImageToBuffer,
-  resizeImageAndSaveImage,
-} from "../src/imageService";
+import { resizeImageAndSaveImage } from "../src/imageService";
 import { readFixture } from "./helpers/fileHelper";
 
 describe("imageService", () => {
