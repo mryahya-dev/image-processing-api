@@ -6,7 +6,9 @@ import sharp from "sharp";
 import { v4 as uuidv4 } from "uuid";
 import { ResizeOptions } from "./types";
 
-const UPLOAD_DIR = process.env.UPLOAD_DIR || "uploads";
+const UPLOAD_DIR = path.resolve(
+  process.env.UPLOAD_DIR || path.join(process.cwd(), "uploads")
+);
 const MAX_IMAGE_BYTES = Number(process.env.MAX_IMAGE_BYTES || 5_000_000);
 
 export async function fetchImageToBuffer(url: string): Promise<Buffer> {
