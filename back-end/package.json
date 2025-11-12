@@ -2,11 +2,11 @@
   "name": "image-processing-api",
   "version": "1.0.0",
   "description": "Image resize and processing API using Node.js, Express, and TypeScript",
-  "main": "dist/server.js",
+  "main": "dist/src/server.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js",
+    "start": "node dist/src/server.js",
     "test": "node -r ts-node/register node_modules/jasmine/bin/jasmine.js --config=jasmine.json"
   },
   "keywords": [
