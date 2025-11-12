@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../enviroments/enviroments'; // automatically swapped in prod
 
 export interface ImageItem {
   filename: string;
@@ -9,10 +10,12 @@ export interface ImageItem {
 
 @Injectable({ providedIn: 'root' })
 export class ImageService {
+  private baseUrl = environment.apiUrl; // backend URL from env
+
   constructor(private http: HttpClient) {}
 
   listImages(): Observable<{ images: ImageItem[] }> {
-    return this.http.get<{ images: ImageItem[] }>('/images');
+    return this.http.get<{ images: ImageItem[] }>(`${this.baseUrl}/images`);
   }
 
   resizeImage(params: {
@@ -29,7 +32,7 @@ export class ImageService {
     if (params.ql) httpParams = httpParams.set('ql', String(params.ql));
 
     return this.http.get<{ message: string; filename: string; url: string }>(
-      '/resize',
+      `${this.baseUrl}/resize`,
       { params: httpParams }
     );
   }
