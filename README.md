@@ -27,8 +27,8 @@ This project is an **Image Resize API** with a frontend Angular application.
 - TypeScript
 - Sharp (image processing)
 - dotenv (environment variables)
-
-**Frontend:**
+- multer (file uploads)
+  **Frontend:**
 
 - Angular
 - TypeScript
@@ -73,11 +73,12 @@ root/
 
 ## Features
 
-- Resize images by URL with width, height, format, and quality options
+- Upload images from your computer
+- Resize images by URL with options for width, height, format, and quality
 - List all uploaded images via API
-- JSON responses for API endpoints
-- UUID filenames for uploaded images
-- Basic validation and size limits
+- Receive JSON responses from API endpoints
+- Automatically generate UUID filenames for uploaded images
+- Enforce basic validation and size limits
 
 ---
 

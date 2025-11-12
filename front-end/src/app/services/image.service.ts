@@ -18,6 +18,26 @@ export class ImageService {
     return this.http.get<{ images: ImageItem[] }>(`${this.baseUrl}/images`);
   }
 
+  uploadAndResizeImage(
+    file: File,
+    width?: number,
+    height?: number,
+    format?: string,
+    quality?: number
+  ) {
+    const formData = new FormData();
+    formData.append('file', file);
+    if (width) formData.append('w', width.toString());
+    if (height) formData.append('h', height.toString());
+    if (format) formData.append('fmt', format);
+    if (quality) formData.append('ql', quality.toString());
+
+    return this.http.post<{ message: string; filename: string; url: string }>(
+      `${this.baseUrl}/upload-resize`,
+      formData
+    );
+  }
+
   resizeImage(params: {
     url: string;
     w?: number;

@@ -1,13 +1,21 @@
 import express from "express";
 import { fetchImageToBuffer, resizeImageAndSaveImage } from "./imageService";
 import { ResizeOptions } from "./types";
+import multer from "multer";
 
 import fs from "fs";
 import path from "path";
 
 const uploadDir = path.join(process.cwd(), process.env.UPLOAD_DIR || "uploads");
 
+// Configure multer for file uploads
+const upload = multer({
+  dest: uploadDir,
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+});
+
 const router = express.Router();
+
 router.get("/images", (req, res) => {
   fs.readdir(uploadDir, (err, files) => {
     if (err)
@@ -60,5 +68,44 @@ router.get("/resize", async (req: any, res: any) => {
     res.status(500).json({ error: err?.message || "internal error" });
   }
 });
+
+router.post(
+  "/upload-resize",
+  upload.single("file"),
+  async (req: any, res: any) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: "No file provided" });
+      }
+
+      const w = req.query.w ? parseInt(String(req.query.w), 10) : undefined;
+      const h = req.query.h ? parseInt(String(req.query.h), 10) : undefined;
+      const fmt = req.query.fmt ? String(req.query.fmt) : undefined;
+      const ql = req.query.ql ? parseInt(String(req.query.ql), 10) : undefined;
+
+      const opts: ResizeOptions = {};
+      if (w && Number.isFinite(w) && w > 0) opts.width = w;
+      if (h && Number.isFinite(h) && h > 0) opts.height = h;
+      if (fmt && ["jpeg", "png", "webp"].includes(fmt))
+        opts.format = fmt as any;
+      if (ql && ql > 0 && ql <= 100) opts.quality = ql;
+
+      const buffer = fs.readFileSync(req.file.path);
+      const result = await resizeImageAndSaveImage(buffer, opts);
+
+      // Clean up uploaded temp file
+      fs.unlinkSync(req.file.path);
+
+      res.json({
+        message: "Image resized successfully",
+        filename: result.filename,
+        url: `/uploads/${result.filename}`,
+      });
+    } catch (err: any) {
+      console.error("upload-resize error", err);
+      res.status(500).json({ error: err?.message || "internal error" });
+    }
+  }
+);
 
 export default router;
