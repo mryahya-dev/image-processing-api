@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   test-backend:
     docker:
-      - image: cimg/node:18.17 # Node version matching your backend
+      - image: cimg/node:18.20 # Node version matching your backend
     steps:
       - checkout
       - run:
@@ -34,7 +34,7 @@ jobs:
           name: Build frontend image
           command: |
             cd front-end
-       - run:
+      - run:
           name: Push images to Docker Hub
           command: |
             echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
