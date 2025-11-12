@@ -6,3 +6,32 @@ button { margin-top:8px; padding:8px 12px; background:var(--accent); color:#fff;
 button[disabled]{ opacity:0.6; cursor:default; }
 .result img { max-width:100%; margin-top:12px; border-radius:8px; border:1px solid #e6e6e6; }
 .error { color:#b91c1c; margin-top:8px; }
+
+
+.input-section {
+  margin-bottom: 1rem;
+}
+.source-options {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.option {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 220px;
+}
+.divider {
+  align-self: center;
+  font-weight: 600;
+  color: #666;
+  margin: 0 0.5rem;
+}
+.file-name {
+  font-size: 0.9rem;
+  color: #333;
+  margin-top: 0.25rem;
+  word-break: break-all;
+}

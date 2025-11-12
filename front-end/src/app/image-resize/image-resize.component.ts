@@ -11,7 +11,6 @@ export class ImageResizeComponent {
   uploadedFile: File | null = null;
   width?: number;
   height?: number;
-  format = 'jpeg';
   quality = 80;
 
   result: { message: string; filename: string; url: string } | null = null;
@@ -28,6 +27,18 @@ export class ImageResizeComponent {
     }
   }
 
+  private detectFormatFromPath(p?: string): string | undefined {
+    if (!p) return undefined;
+    const clean = p.split('?')[0].split('#')[0];
+    const m = clean.match(/\.([^.\/\\]+)$/);
+    if (!m) return undefined;
+    const ext = m[1].toLowerCase();
+    if (ext === 'jpg' || ext === 'jpeg') return 'jpeg';
+    if (ext === 'png') return 'png';
+    if (ext === 'webp') return 'webp';
+    return undefined;
+  }
+
   resize() {
     this.error = '';
     this.result = null;
@@ -39,6 +50,10 @@ export class ImageResizeComponent {
 
     this.loading = true;
 
+    const detectedFormat = this.uploadedFile
+      ? this.detectFormatFromPath(this.uploadedFile.name)
+      : this.detectFormatFromPath(this.url);
+
     if (this.uploadedFile) {
       // Upload and resize
       this.api
@@ -46,7 +61,7 @@ export class ImageResizeComponent {
           this.uploadedFile,
           this.width,
           this.height,
-          this.format,
+          detectedFormat,
           this.quality
         )
         .subscribe({
@@ -68,7 +83,7 @@ export class ImageResizeComponent {
           url: this.url,
           w: this.width,
           h: this.height,
-          fmt: this.format,
+          fmt: detectedFormat,
           ql: this.quality,
         })
         .subscribe({
@@ -91,7 +106,6 @@ export class ImageResizeComponent {
     this.uploadedFile = null;
     this.width = undefined;
     this.height = undefined;
-    this.format = 'jpeg';
     this.quality = 80;
   }
 }

@@ -1,3 +1,4 @@
+// ...existing code...
 import { Component } from '@angular/core';
 
 @Component({
@@ -12,13 +13,13 @@ import { Component } from '@angular/core';
       </header>
 
       <main class="main-content">
-        <!-- Gallery component always visible -->
-        <app-images-list class="gallery"></app-images-list>
-
-        <!-- Resize form component as a side panel / call-to-action -->
+        <!-- Resize form panel on top -->
         <div class="resize-panel" *ngIf="showResize">
           <app-image-resize></app-image-resize>
         </div>
+
+        <!-- Gallery shown below -->
+        <app-images-list class="gallery"></app-images-list>
       </main>
     </div>
   `,
@@ -27,3 +28,4 @@ import { Component } from '@angular/core';
 export class AppComponent {
   showResize = false;
 }
+// ...existing code...
