@@ -34,7 +34,7 @@ This project is an **Image Resize API** with a frontend Angular application.
 - TypeScript
 - RxJS
 
-**Deployment & CI/CD:**
+**Deployment & CI/CD**
 
 - Backend Server: Deployed on Sevella
 - Frontend: Deployed on **Cloudflare Pages**
@@ -130,15 +130,6 @@ GET /images
   ]
 }
 ```
-
----
-
-## CI/CD Pipeline (CircleCI)
-
-- CircleCI **runs backend tests** to ensure functionality
-- Then it **builds Docker images** for backend and frontend
-- Finally, it **pushes the images to Docker Hub**
-- This ensures that the latest versions are always ready for deployment
 
 ---
 
