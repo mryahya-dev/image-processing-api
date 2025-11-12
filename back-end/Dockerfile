@@ -23,6 +23,7 @@ RUN npm ci --omit=dev
 
 # Copy compiled code from builder
 COPY --from=builder /app/dist ./dist
+RUN mkdir -p /app/uploads && chmod -R 777 /app/uploads
 
 # Run as non-root
 USER node

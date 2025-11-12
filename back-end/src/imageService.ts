@@ -9,8 +9,6 @@ import { ResizeOptions } from "./types";
 const UPLOAD_DIR = process.env.UPLOAD_DIR || "uploads";
 const MAX_IMAGE_BYTES = Number(process.env.MAX_IMAGE_BYTES || 5_000_000);
 
-if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-
 export async function fetchImageToBuffer(url: string): Promise<Buffer> {
   const res = await fetch(url);
   if (!res.ok)
