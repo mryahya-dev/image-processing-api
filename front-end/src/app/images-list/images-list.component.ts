@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ImageService, ImageItem } from '../services/image.service';
-import { environment } from '../../enviroments/enviroments'; // automatically swapped in prod
+import { environment } from '../../enviroments/enviroments';
 
 @Component({
   selector: 'app-images-list',
@@ -8,22 +8,25 @@ import { environment } from '../../enviroments/enviroments'; // automatically sw
   styleUrls: ['./images-list.component.css'],
 })
 export class ImagesListComponent implements OnInit {
-  images: ImageItem[] = [];
+  images: any[] = [];
   loading = false;
   error = '';
-  api_uril = environment.apiUrl;
+  api_url = environment.apiUrl;
+
+  selectedImage: any = null;
+  showModal = false;
+
   constructor(private api: ImageService) {}
 
-  ngOnInit(): void {
-    this.load();
+  ngOnInit() {
+    this.loadImages();
   }
 
-  load() {
+  loadImages() {
     this.loading = true;
-    this.error = '';
     this.api.listImages().subscribe({
       next: (res) => {
-        this.images = res.images || [];
+        this.images = res.images;
         this.loading = false;
       },
       error: (err) => {
@@ -32,5 +35,28 @@ export class ImagesListComponent implements OnInit {
         console.error(err);
       },
     });
+  }
+
+  openImage(image: any) {
+    this.selectedImage = image;
+    this.showModal = true;
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeModal() {
+    this.showModal = false;
+    this.selectedImage = null;
+    document.body.style.overflow = 'auto';
+  }
+
+  downloadImage(image: any) {
+    const downloadUrl = `${this.api_url}/download/${image.filename}`;
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = image.filename;
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 }

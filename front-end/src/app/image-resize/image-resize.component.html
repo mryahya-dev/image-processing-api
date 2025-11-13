@@ -4,33 +4,41 @@
     <div class="input-section">
         <label>Image Source:</label>
         <div class="source-options">
-            <div class="option">
-                <label for="imageUrl">From URL:</label>
-                <input id="imageUrl" type="text" [(ngModel)]="url" placeholder="Enter image URL"
+            <div class="option url-option" [class.active]="!uploadedFile">
+                <label for="imageUrl">
+                    <span class="option-icon">🔗</span>
+                    From URL
+                </label>
+                <input id="imageUrl" type="text" [(ngModel)]="url" placeholder="Paste image URL here"
                     [disabled]="uploadedFile !== null" />
             </div>
 
             <div class="divider">OR</div>
 
-            <div class="option">
-                <label for="fileUpload">Upload from Computer:</label>
+            <div class="option file-option" [class.active]="uploadedFile !== null">
+                <label for="fileUpload">
+                    <span class="option-icon">📁</span>
+                    Upload from Computer
+                </label>
                 <input id="fileUpload" type="file" accept="image/*" (change)="onFileSelected($event)" />
-                <span *ngIf="uploadedFile" class="file-name">{{ uploadedFile.name }}</span>
+                <span *ngIf="uploadedFile" class="file-name">✓ {{ uploadedFile.name }}</span>
             </div>
         </div>
     </div>
 
     <div class="params-section">
-        <label>Width (px):</label>
-        <input type="number" [(ngModel)]="width" placeholder="Optional" />
-
-        <label>Height (px):</label>
-        <input type="number" [(ngModel)]="height" placeholder="Optional" />
-
-
-
-        <label>Quality:</label>
-        <input type="number" [(ngModel)]="quality" min="1" max="100" />
+        <div>
+            <label>Width (px):</label>
+            <input type="number" [(ngModel)]="width" placeholder="Optional" />
+        </div>
+        <div>
+            <label>Height (px):</label>
+            <input type="number" [(ngModel)]="height" placeholder="Optional" />
+        </div>
+        <div>
+            <label>Quality:</label>
+            <input type="number" [(ngModel)]="quality" min="1" max="100" />
+        </div>
     </div>
 
     <button (click)="resize()" [disabled]="loading">

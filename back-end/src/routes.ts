@@ -108,4 +108,32 @@ router.post(
   }
 );
 
+// ...existing code...
+
+router.get("/download/:filename", (req: any, res: any) => {
+  try {
+    const filename = req.params.filename;
+    const filepath = path.join(uploadDir, filename);
+
+    // Security: prevent path traversal
+    if (!filepath.startsWith(uploadDir)) {
+      return res.status(400).json({ error: "Invalid filename" });
+    }
+
+    // Check if file exists
+    if (!fs.existsSync(filepath)) {
+      return res.status(404).json({ error: "File not found" });
+    }
+
+    // Send file with download headers
+    res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+    res.setHeader("Content-Type", "application/octet-stream");
+    res.download(filepath, filename);
+  } catch (err: any) {
+    console.error("download error", err);
+    res.status(500).json({ error: err?.message || "internal error" });
+  }
+});
+
+// ...existing code...
 export default router;

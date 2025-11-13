@@ -1,5 +1,5 @@
-// ...existing code...
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { ImagesListComponent } from './images-list/images-list.component';
 
 @Component({
   selector: 'app-root',
@@ -15,11 +15,13 @@ import { Component } from '@angular/core';
       <main class="main-content">
         <!-- Resize form panel on top -->
         <div class="resize-panel" *ngIf="showResize">
-          <app-image-resize></app-image-resize>
+          <app-image-resize
+            (imageResized)="onImageResized()"
+          ></app-image-resize>
         </div>
 
         <!-- Gallery shown below -->
-        <app-images-list class="gallery"></app-images-list>
+        <app-images-list #imagesList class="gallery"></app-images-list>
       </main>
     </div>
   `,
@@ -27,5 +29,13 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   showResize = false;
+
+  @ViewChild('imagesList') imagesList!: ImagesListComponent;
+
+  onImageResized() {
+    // Refresh the gallery when image is resized
+    if (this.imagesList) {
+      this.imagesList.loadImages();
+    }
+  }
 }
-// ...existing code...

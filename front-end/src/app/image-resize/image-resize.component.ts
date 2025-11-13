@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { ImageService } from '../services/image.service';
-import { environment } from '../../enviroments/enviroments'; // automatically swapped in prod
+import { environment } from '../../enviroments/enviroments';
 
 @Component({
   selector: 'app-image-resize',
@@ -18,6 +18,8 @@ export class ImageResizeComponent {
   result: { message: string; filename: string; url: string } | null = null;
   loading = false;
   error = '';
+
+  @Output() imageResized = new EventEmitter<void>();
 
   constructor(private api: ImageService) {}
 
@@ -71,6 +73,7 @@ export class ImageResizeComponent {
             this.result = res;
             this.loading = false;
             this.resetForm();
+            this.imageResized.emit(); // Emit event to refresh gallery
           },
           error: (err) => {
             this.error = 'Upload/resize failed';
@@ -93,6 +96,7 @@ export class ImageResizeComponent {
             this.result = res;
             this.loading = false;
             this.resetForm();
+            this.imageResized.emit(); // Emit event to refresh gallery
           },
           error: (err) => {
             this.error = 'Resize failed';
@@ -109,5 +113,10 @@ export class ImageResizeComponent {
     this.width = undefined;
     this.height = undefined;
     this.quality = 80;
+
+    const fileInput = document.getElementById('fileUpload') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
   }
 }

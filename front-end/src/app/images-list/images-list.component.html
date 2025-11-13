@@ -1,19 +1,62 @@
-<div class="card">
-    <h2>Gallery</h2>
-
-    <div *ngIf="loading">Loading...</div>
-    <div *ngIf="error" class="error">{{ error }}</div>
-
-    <div class="gallery" *ngIf="images.length">
-        <div class="card-item" *ngFor="let img of images">
-            <a [href]="api_uril+img.url" target="_blank" rel="noreferrer">
-                <img [src]="img.url" [alt]="img.filename" />
-            </a>
-            <div class="info">{{ img.filename }}</div>
-        </div>
+<div class="images-container">
+    <div class="gallery-header">
+        <h2>Image Gallery</h2>
+        <span class="image-count" *ngIf="images.length > 0">{{ images.length }} images</span>
     </div>
 
-    <div *ngIf="!images.length && !loading">
-        <p>No images yet — try resizing one.</p>
+    <div *ngIf="loading" class="loading">
+        <div class="spinner"></div>
+        <p>Loading images...</p>
+    </div>
+
+    <div *ngIf="error" class="error-message">
+        {{ error }}
+    </div>
+
+    <div *ngIf="!loading && images.length === 0 && !error" class="empty-state">
+        <div class="empty-icon">🖼️</div>
+        <p>No images yet. Resize an image to get started!</p>
+    </div>
+
+    <div class="gallery-grid" *ngIf="!loading && images.length > 0">
+        <div class="gallery-item" *ngFor="let image of images" (click)="openImage(image)">
+            <div class="image-wrapper">
+                <img [src]="api_url + image.url" [alt]="image.filename" class="gallery-image" />
+                <div class="image-overlay">
+                    <button class="overlay-btn view-btn" title="View full size">
+                        <span>👁️</span>
+                    </button>
+                    <button class="overlay-btn download-btn" (click)="downloadImage(image); $event.stopPropagation()"
+                        title="Download">
+                        <span>⬇️</span>
+                    </button>
+
+                </div>
+            </div>
+            <div class="image-info">
+                <p class="image-name" [title]="image.filename">{{ image.filename }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for full-size image -->
+<div class="modal" *ngIf="showModal" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <button class="modal-close" (click)="closeModal()" title="Close">✕</button>
+
+        <div class="modal-image-wrapper">
+            <img [src]="api_url + selectedImage.url" [alt]="selectedImage.filename" class="modal-image" />
+        </div>
+
+        <div class="modal-footer">
+            <p class="modal-filename">{{ selectedImage.filename }}</p>
+            <div class="modal-actions">
+                <button class="modal-btn" (click)="downloadImage(selectedImage)" title="Download">
+                    ⬇️ Download
+                </button>
+
+            </div>
+        </div>
     </div>
 </div>
