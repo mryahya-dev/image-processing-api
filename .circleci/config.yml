@@ -60,9 +60,9 @@ jobs:
 
             echo "Polling deployment status..."
             while true; do
-              STATUS=$(curl -s -H "Authorization: Bearer $SEVALLA_API_TOKEN" \
+                STATUS=$(curl -s -H "Authorization: Bearer $SEVALLA_API_TOKEN" \
                 "https://api.sevalla.com/v2/applications/deployments/$DEPLOYMENT_ID" \
-                | jq -r '.status')
+                | jq -r '.deployment.status')
 
               echo "Current deployment status: $STATUS"
 
