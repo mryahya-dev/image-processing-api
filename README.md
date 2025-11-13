@@ -78,6 +78,7 @@ root/
 - List all uploaded images via API
 - Receive JSON responses from API endpoints
 - Automatically generate UUID filenames for uploaded images
+- download image
 - Enforce basic validation and size limits
 
 ---

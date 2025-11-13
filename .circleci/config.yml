@@ -38,6 +38,15 @@ jobs:
             echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
             docker push $DOCKER_HUB_USERNAME/image-resizer-backend:latest
 
+      - run:
+          name: Trigger Sevalla deployment
+          command: |
+            curl -X POST \
+               -H "Content-Type: application/json" \
+              "$SEVALLA_DEPLOY_HOOK_URL" \
+              -d '{"docker_image":"'$DOCKER_HUB_USERNAME'/image-resizer-backend:latest"}'
+
+    
 workflows:
   version: 2
   build-and-test:
