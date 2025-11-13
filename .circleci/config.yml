@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   test-backend:
     docker:
-      - image: cimg/node:18.20 # Node version matching your backend
+      - image: cimg/node:18.20
     steps:
       - checkout
       - run:
@@ -18,7 +18,7 @@ jobs:
             mkdir -p uploads
             npm test
 
-  build-and-push:
+  build-backend-image:
     docker:
       - image: cimg/base:stable
     environment:
@@ -27,17 +27,24 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-          name: Build backend image
+          name: Build backend Docker image
           command: |
             cd back-end
             docker build -t $DOCKER_HUB_USERNAME/image-resizer-backend:latest .
-
       - run:
-          name: Push images to Docker Hub
+          name: Push image to Docker Hub
           command: |
             echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
             docker push $DOCKER_HUB_USERNAME/image-resizer-backend:latest
 
+  deploy-backend:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - run:
+          name: Install jq
+          command: sudo apt-get update && sudo apt-get install -y jq
       - run:
           name: Trigger Sevalla deployment
           command: |
@@ -48,20 +55,25 @@ jobs:
               -d '{"docker_image":"'$DOCKER_HUB_USERNAME'/image-resizer-backend:latest"}')
 
             DEPLOYMENT_ID=$(echo "$RESPONSE" | jq -r '.deployment.id')
-
             echo "Triggered deployment ID: $DEPLOYMENT_ID"
+            echo "$DEPLOYMENT_ID" > deployment_id.txt
 
+  verify-deployment:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
       - run:
-          name: install jq tool
+          name: Install jq
           command: sudo apt-get update && sudo apt-get install -y jq
-
       - run:
-          name: Verify deployment
+          name: Verify Sevalla deployment
           command: |
-        
+            DEPLOYMENT_ID=$(cat deployment_id.txt)
+
             while true; do
               STATUS=$(curl -s -H "Authorization: Bearer $SEVALLA_API_TOKEN" \
-                  "https://api.sevalla.com/v2/applications/$SEVELLA_APP_ID	/deployments/$DEPLOYMENT_ID" \
+                  "https://api.sevalla.com/v2/applications/$SEVELLA_APP_ID/deployments/$DEPLOYMENT_ID" \
                   | jq -r '.status')
 
               echo "Current deployment status: $STATUS"
@@ -78,18 +90,29 @@ jobs:
               fi
             done
 
-    
 workflows:
   version: 2
-  build-and-test:
+  build-test-deploy:
     jobs:
       - test-backend:
           filters:
             branches:
               only: main
-      - build-and-push:
+      - build-backend-image:
           requires:
             - test-backend
+          filters:
+            branches:
+              only: main
+      - deploy-backend:
+          requires:
+            - build-backend-image
+          filters:
+            branches:
+              only: main
+      - verify-deployment:
+          requires:
+            - deploy-backend
           filters:
             branches:
               only: main
