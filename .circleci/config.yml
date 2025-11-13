@@ -48,35 +48,34 @@ jobs:
       - run:
           name: Deploy backend and verify
           command: |
-            # Trigger Sevalla deployment
+            echo "Triggering deployment..."
             RESPONSE=$(curl -s -X POST \
               -H "Authorization: Bearer $SEVALLA_API_TOKEN" \
               -H "Content-Type: application/json" \
               "$SEVALLA_DEPLOY_HOOK_URL" \
               -d '{"docker_image":"'$DOCKER_HUB_USERNAME'/image-resizer-backend:latest"}')
 
-            # Save deployment ID in variable
             DEPLOYMENT_ID=$(echo "$RESPONSE" | jq -r '.deployment.id')
             echo "Triggered deployment ID: $DEPLOYMENT_ID"
 
-            # Verify deployment in a loop
+            echo "Polling deployment status..."
             while true; do
               STATUS=$(curl -s -H "Authorization: Bearer $SEVALLA_API_TOKEN" \
-                  "https://api.sevalla.com/v2/applications/$SEVELLA_APP_ID/deployments/$DEPLOYMENT_ID" \
-                  | jq -r '.status')
+                "https://api.sevalla.com/v2/applications/deployments/$DEPLOYMENT_ID" \
+                | jq -r '.status')
 
               echo "Current deployment status: $STATUS"
 
               if [[ "$STATUS" == "success" ]]; then
-                echo "Deployment succeeded!"
+                echo "✅ Deployment succeeded!"
                 break
               elif [[ "$STATUS" == "failed" ]]; then
-                echo "Deployment failed!"
+                echo "❌ Deployment failed!"
                 exit 1
-              else
-                echo "Waiting 10 seconds..."
-                sleep 10
               fi
+
+              echo "Waiting 10 seconds..."
+              sleep 10
             done
 
 workflows:
