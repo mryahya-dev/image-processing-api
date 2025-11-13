@@ -37,7 +37,7 @@ jobs:
             echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
             docker push $DOCKER_HUB_USERNAME/image-resizer-backend:latest
 
-  deploy-backend:
+  deploy-and-verify:
     docker:
       - image: cimg/base:stable
     steps:
@@ -46,31 +46,20 @@ jobs:
           name: Install jq
           command: sudo apt-get update && sudo apt-get install -y jq
       - run:
-          name: Trigger Sevalla deployment
+          name: Deploy backend and verify
           command: |
+            # Trigger Sevalla deployment
             RESPONSE=$(curl -s -X POST \
               -H "Authorization: Bearer $SEVALLA_API_TOKEN" \
               -H "Content-Type: application/json" \
               "$SEVALLA_DEPLOY_HOOK_URL" \
               -d '{"docker_image":"'$DOCKER_HUB_USERNAME'/image-resizer-backend:latest"}')
 
+            # Save deployment ID in variable
             DEPLOYMENT_ID=$(echo "$RESPONSE" | jq -r '.deployment.id')
             echo "Triggered deployment ID: $DEPLOYMENT_ID"
-            echo "$DEPLOYMENT_ID" > deployment_id.txt
 
-  verify-deployment:
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - checkout
-      - run:
-          name: Install jq
-          command: sudo apt-get update && sudo apt-get install -y jq
-      - run:
-          name: Verify Sevalla deployment
-          command: |
-            DEPLOYMENT_ID=$(cat deployment_id.txt)
-
+            # Verify deployment in a loop
             while true; do
               STATUS=$(curl -s -H "Authorization: Bearer $SEVALLA_API_TOKEN" \
                   "https://api.sevalla.com/v2/applications/$SEVELLA_APP_ID/deployments/$DEPLOYMENT_ID" \
@@ -104,15 +93,9 @@ workflows:
           filters:
             branches:
               only: main
-      - deploy-backend:
+      - deploy-and-verify:
           requires:
             - build-backend-image
-          filters:
-            branches:
-              only: main
-      - verify-deployment:
-          requires:
-            - deploy-backend
           filters:
             branches:
               only: main
