@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ImageService, ImageItem } from '../services/image.service';
+import { environment } from '../../enviroments/enviroments'; // automatically swapped in prod
 
 @Component({
   selector: 'app-images-list',
@@ -10,7 +11,7 @@ export class ImagesListComponent implements OnInit {
   images: ImageItem[] = [];
   loading = false;
   error = '';
-
+  api_uril = environment.apiUrl;
   constructor(private api: ImageService) {}
 
   ngOnInit(): void {

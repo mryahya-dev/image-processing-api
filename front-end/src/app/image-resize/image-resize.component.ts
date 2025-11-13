@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ImageService } from '../services/image.service';
+import { environment } from '../../enviroments/enviroments'; // automatically swapped in prod
 
 @Component({
   selector: 'app-image-resize',
@@ -7,6 +8,7 @@ import { ImageService } from '../services/image.service';
   styleUrls: ['./image-resize.component.css'],
 })
 export class ImageResizeComponent {
+  api_url = environment.apiUrl;
   url = '';
   uploadedFile: File | null = null;
   width?: number;

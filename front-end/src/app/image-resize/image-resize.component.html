@@ -41,6 +41,6 @@
     <div *ngIf="result" class="result">
         <p>{{ result.message }}</p>
         <p>Filename: {{ result.filename }}</p>
-        <img [src]="result.url" alt="Resized image" />
+        <img [src]="api_url+result.url" alt="Resized image" />
     </div>
 </div>

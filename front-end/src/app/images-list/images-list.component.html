@@ -6,7 +6,7 @@
 
     <div class="gallery" *ngIf="images.length">
         <div class="card-item" *ngFor="let img of images">
-            <a [href]="img.url" target="_blank" rel="noreferrer">
+            <a [href]="api_uril+img.url" target="_blank" rel="noreferrer">
                 <img [src]="img.url" [alt]="img.filename" />
             </a>
             <div class="info">{{ img.filename }}</div>
