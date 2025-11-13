@@ -63,7 +63,7 @@ jobs:
                 STATUS=$(curl -s -H "Authorization: Bearer $SEVALLA_API_TOKEN" \
                 "https://api.sevalla.com/v2/applications/deployments/$DEPLOYMENT_ID" \
                 | jq -r '.deployment.status')
-              echo $SEVALLA_API_TOKEN
+              
               echo "Current deployment status: $STATUS"
 
               if [[ "$STATUS" == "success" ]]; then
@@ -83,16 +83,19 @@ workflows:
   build-test-deploy:
     jobs:
       - test-backend:
+          context: shared_envs
           filters:
             branches:
               only: main
       - build-backend-image:
+          context: shared_envs
           requires:
             - test-backend
           filters:
             branches:
               only: main
       - deploy-and-verify:
+          context: shared_envs
           requires:
             - build-backend-image
           filters:
