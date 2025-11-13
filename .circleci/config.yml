@@ -63,7 +63,7 @@ jobs:
                 STATUS=$(curl -s -H "Authorization: Bearer $SEVALLA_API_TOKEN" \
                 "https://api.sevalla.com/v2/applications/deployments/$DEPLOYMENT_ID" \
                 | jq -r '.deployment.status')
-
+              echo $SEVALLA_API_TOKEN
               echo "Current deployment status: $STATUS"
 
               if [[ "$STATUS" == "success" ]]; then
