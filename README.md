@@ -1,7 +1,5 @@
 # Image Resize Project
 
-![CircleCI](https://circleci.com/gh/mryahya-dev/image-processing-api.svg?style=svg)
-
 ## Check Live Demo
 
 Try the app live here: [https://image-resizer.yahyeapps.com](https://image-resizer.yahyeapps.com)
@@ -38,7 +36,8 @@ This project is an **Image Resize API** with a frontend Angular application.
 
 - Backend Server: Deployed on Sevella
 - Frontend: Deployed on **Cloudflare Pages**
-- Continuous Integration & Deployment: CircleCI
+- Continuous Integration & Deployment: CircleCI ![CircleCI](https://circleci.com/gh/mryahya-dev/image-processing-api.svg?style=svg)
+
   - Runs automated **tests**
   - Builds **Docker images** for backend and frontend
   - Pushes images to **Docker Hub**
