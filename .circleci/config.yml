@@ -46,7 +46,7 @@ jobs:
           name: Install jq
           command: sudo apt-get update && sudo apt-get install -y jq
       - run:
-          name: Deploy backend 
+          name: Deploy backend  and verify 
           command: |
             echo "Triggering deployment..." 
             RESPONSE=$(curl -s -X POST \
@@ -57,10 +57,7 @@ jobs:
 
             DEPLOYMENT_ID=$(echo "$RESPONSE" | jq -r '.deployment.id')
             echo "Triggered deployment ID: $DEPLOYMENT_ID"
-      - run:  
-          name: Verify deployment status
-          command: |
-            echo "Verifying deployment status..."
+                       echo "Verifying deployment status..."
              while true; do
                 STATUS=$(curl -s -H "Authorization: Bearer $SEVALLA_API_TOKEN" \
                 "https://api.sevalla.com/v2/applications/deployments/$DEPLOYMENT_ID" \
@@ -79,6 +76,7 @@ jobs:
               echo "Waiting 10 seconds..."
               sleep 10
             done
+ 
 
 workflows:
   version: 2
